@@ -73,7 +73,6 @@ function shoppingListController() {
         debug('Connected to Mongo - deleteIngredient');
         const db = client.db(dbName);
         const collection = await db.collection('ingredients');
-        // findOne - Finds the first one:
         const removed = await collection.deleteOne({ _id: ObjectID(id) });
         res.json(removed);
       } catch (err) {
