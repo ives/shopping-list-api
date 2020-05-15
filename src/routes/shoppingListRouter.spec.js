@@ -17,7 +17,7 @@ describe('basic test', () => {
     obj.should.deep.equal(objB);
   });
 
-  it('should FAIL on purpose', () => {
+  it.skip('should FAIL on purpose', () => {
     assert.equal(1, 2);
   });
 });
