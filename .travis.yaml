@@ -1,6 +1,6 @@
 before_script:
   - npm install
-script: DEBUG=server,server:* nodemon ./src/server.js
+script: npm test
 landuage: node_js
 env:
   - PORT=3007
