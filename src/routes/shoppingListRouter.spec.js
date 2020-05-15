@@ -1,4 +1,4 @@
-//const shoppingListRouter = require('./shoppingListRouter')();
+// const shoppingListRouter = require('./shoppingListRouter')();
 
 const assert = require('assert');
 const should = require('chai').should();
@@ -15,6 +15,9 @@ describe('basic test', () => {
 
     // Compare Obj - use deep, else checks if instance of same Obj
     obj.should.deep.equal(objB);
+  });
 
+  it('should FAIL on purpose', () => {
+    assert.equal(1, 2);
   });
 });
