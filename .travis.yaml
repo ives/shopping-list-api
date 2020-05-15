@@ -1,0 +1,8 @@
+before_script:
+  - npm install
+script: DEBUG=server,server:* nodemon ./src/server.js
+landuage: node_js
+env:
+  - PORT=3007
+node_js:
+  - "12.13"
