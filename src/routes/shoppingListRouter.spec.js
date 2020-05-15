@@ -15,5 +15,7 @@ describe('basic test', () => {
 
     // Compare Obj - use deep, else checks if instance of same Obj
     obj.should.deep.equal(objB);
+
+    assert.equal(2, 4);
   });
 });
