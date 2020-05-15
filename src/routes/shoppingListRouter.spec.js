@@ -18,6 +18,6 @@ describe('basic test', () => {
   });
 
   it('should FAIL on purpose', () => {
-    assert.equal(1, 2);
+    assert.equal(1, 1);
   });
 });
