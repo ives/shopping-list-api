@@ -22,11 +22,11 @@ function shoppingListController() {
         const db = client.db(dbName);
 
         const collection = await db.collection('ingredients');
-        const books = await collection.find().toArray();
-        debug(books);
+        const item = await collection.find().toArray();
+        debug(item);
         // send back a JSON object
-        // res.send(books);
-        res.json(books);
+        // res.send(item);
+        res.status(200).json(item);
       } catch (err) {
         debug(err.stack);
       }
@@ -34,16 +34,35 @@ function shoppingListController() {
       client.close();
     }());
   }
-  function addIngredient(req, res) {
-    debug(req.body);
 
+  function getIngredientById(req, res) {
+    (async function mongo() {
+      const { id } = req.params;
+      let client;
+      try {
+        client = await MongoClient.connect(url);
+        debug('Connected to Mongo - getIngredientList');
+
+        const db = client.db(dbName);
+
+        const collection = await db.collection('ingredients');
+        const item = await collection.findOne({ _id: ObjectID(id) });
+        res.status(200).json(item);
+      } catch (err) {
+        debug(err.stack);
+      }
+
+      client.close();
+    }());
+  }
+
+  function addIngredient(req, res) {
     const { name, supermarket } = req.body;
-    if (!name || !supermarket) {
-      return displayError(res, 'name and supermarket are both required fields');
+    if (!name) {
+      return displayError(res, 'name is a required field');
     }
 
     const ingredient = { name, supermarket };
-    debug(ingredient);
 
     (async function mongo() {
       let client;
@@ -58,6 +77,42 @@ function shoppingListController() {
         debug(err.stack);
       }
       client.close();
+    }());
+  }
+
+  function replaceIngredient(req, res) {
+    (async function query() {
+      const { id } = req.params;
+
+      const { name, supermarket } = req.body;
+      if (!name) {
+        return displayError(res, 'name is a required field');
+      }
+
+      const ingredient = { name, supermarket };
+      debug(ingredient);
+
+
+      let client;
+
+      debug('Connected to Mongo - ID', id);
+
+      try {
+        client = await MongoClient.connect(url);
+        debug('Connected to Mongo - replaceIngredient');
+        const db = client.db(dbName);
+        const collection = await db.collection('ingredients');
+
+        // Returns the OLD item from 'findOne' bit unless set extra params returnOriginal: false
+        const updatedItem = await collection
+          .findOneAndReplace({ _id: ObjectID(id) }, ingredient, {
+            returnOriginal: false,
+          });
+        res.json(updatedItem.value);
+      } catch (err) {
+        debug(err.stack);
+        displayError(res, `Could not replace: ${err.stack}`);
+      }
     }());
   }
 
@@ -85,7 +140,9 @@ function shoppingListController() {
   // The Revealing module pattern:
   return {
     getIngredientList,
+    getIngredientById,
     addIngredient,
+    replaceIngredient,
     deleteIngredient,
   };
 }
