@@ -4,7 +4,9 @@ const shoppingListController = require('../controllers/shoppingListController');
 const shoppingListRouter = express.Router();
 
 function router() {
-  const { getIngredientList, addIngredient, deleteIngredient } = shoppingListController();
+  const {
+    getIngredientList, getIngredientById, addIngredient, replaceIngredient, deleteIngredient,
+  } = shoppingListController();
 
   shoppingListRouter
     .route('/ingredients')
@@ -13,6 +15,8 @@ function router() {
 
   shoppingListRouter
     .route('/ingredients/:id')
+    .get(getIngredientById)
+    .put(replaceIngredient)
     .delete(deleteIngredient);
 
   return shoppingListRouter;
